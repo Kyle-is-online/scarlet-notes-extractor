@@ -86,16 +86,15 @@ def get_notes(obj):
                 note_dict['time'] = datetime.fromtimestamp(timestamp).strftime("%A, %B %d, %Y %I:%M:%S")
                 note_dict['date'] = datetime.fromtimestamp(timestamp).strftime("%Y_%m_%d")
 
-                # TITLE
-                desc = note['description']
-                start = desc.find("text") + 7
-                fin = desc.find("\"", start)
-                note_dict['title'] = (desc[start: fin])
+                # TITLE and TEXT
+                note = json.loads(note['description'])['note']
 
-                # TEXT
-                start = desc.find("text", start) + 7
-                fin = desc.find("\"", start)
-                note_dict['text'] = desc[start: fin].replace("\\n", "\n")
+                if len(note) > 1:
+                        note_dict['title'] = note[0]['text']
+                        note_dict['text'] = note[1]['text']
+                else:
+                        note_dict['title'] = "Empty"
+                        note_dict['text'] = note[0]['text']
 
                 notes.append(note_dict)
         return notes
